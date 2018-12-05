@@ -1,0 +1,14 @@
+package: github.com/fooku/authBasic
+import:
+- package: github.com/dgrijalva/jwt-go
+  version: ^3.2.0
+- package: github.com/labstack/echo
+  version: ^3.3.8
+  subpackages:
+  - middleware
+- package: golang.org/x/crypto
+  subpackages:
+  - bcrypt
+- package: gopkg.in/mgo.v2
+  subpackages:
+  - bson
