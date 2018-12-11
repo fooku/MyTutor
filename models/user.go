@@ -77,3 +77,18 @@ func GetMember() ([]User, error) {
 	fmt.Println("Results All: ", results)
 	return results, err
 }
+
+func DeleteMember(id string) error {
+	fmt.Println("id", id)
+	if !bson.IsObjectIdHex(id) {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	objectID := bson.ObjectIdHex(id)
+	s := mongoSession.Copy()
+	defer s.Close()
+	err := s.DB(database).C("users").RemoveId(objectID)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusNotFound, Message: "not found"}
+	}
+	return nil
+}

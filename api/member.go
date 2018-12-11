@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -21,4 +22,17 @@ func ListMember(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, u)
+}
+
+// DeleteMember > ลบสมาชิก
+func DeleteMember(c echo.Context) error {
+	id := c.FormValue("id")
+	fmt.Println(id)
+	err := models.DeleteMember(id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, map[string]string{
+		"Message": "Succeed",
+	})
 }
