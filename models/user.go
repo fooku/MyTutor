@@ -44,6 +44,7 @@ func AddUser(user User, username string, email string, password string, firsname
 	user.Email = email
 	user.FirstName = firsname
 	user.LastName = lastname
+	user.UserType = "member"
 	user.Timestamp = time.Now()
 	err = c.Insert(&user)
 	// err := s.DB(database).C("users").Update("Username", &user)
