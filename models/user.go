@@ -50,12 +50,12 @@ func AddUser(user User, u string, e string, p string) error {
 	return nil
 }
 
-func FindUser(username string) (error, User) {
+func FindUser(email string) (error, User) {
 	s := mongoSession.Copy()
 	defer s.Close()
 
 	var result User
-	err := s.DB(database).C("users").Find(bson.M{"username": username}).One(&result)
+	err := s.DB(database).C("users").Find(bson.M{"email": email}).One(&result)
 	// Find(bson.M{"username": "sdfasdfasdf"}).Sort("-timestamp").All(&results)
 
 	if err != nil {

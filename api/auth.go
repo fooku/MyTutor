@@ -21,7 +21,7 @@ func Login(c echo.Context) error {
 	u := new(models.LoginRequest)
 	err := c.Bind(u)
 
-	err, user := models.FindUser(u.Username)
+	err, user := models.FindUser(u.Email)
 
 	if err == mgo.ErrNotFound {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid email"}
@@ -33,7 +33,7 @@ func Login(c echo.Context) error {
 
 		// Set claims
 		claims := token.Claims.(jwt.MapClaims)
-		claims["name"] = u.Username
+		claims["name"] = u.Email
 		claims["admin"] = false
 		claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 

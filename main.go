@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -29,6 +30,12 @@ func main() {
 	e := echo.New()
 
 	// Middleware
+	e.Use(middleware.BodyDumpWithConfig(middleware.BodyDumpConfig{
+		Handler: func(c echo.Context, reqBody, resBody []byte) {
+			fmt.Println("Request >>>", c.Request())
+		},
+	}))
+
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
