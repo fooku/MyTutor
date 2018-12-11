@@ -58,7 +58,7 @@ func Register(c echo.Context) error {
 	err := c.Bind(u)
 
 	fmt.Println(u)
-	err = models.AddUser(user, u.Username, u.Email, u.Password)
+	err = models.AddUser(user, u.Username, u.Email, u.Password, u.FirstName, u.LastName)
 
 	return err
 }

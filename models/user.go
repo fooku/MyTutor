@@ -14,15 +14,16 @@ import (
 type User struct {
 	ID bson.ObjectId `bson:"_id,omitempty"`
 	HasPassword
+	UserType  string `bson:"usertype"`
 	Email     string `bson:"email"`
 	Username  string `bson:"username"`
 	FirstName string `bson:"firsname"`
-	LasttName string `bson:"lastname"`
+	LastName  string `bson:"lastname"`
 	Timestamp time.Time
 }
 
 // AddUser > insert data to mongoDB
-func AddUser(user User, u string, e string, p string) error {
+func AddUser(user User, username string, email string, password string, firsname string, lastname string) error {
 	s := mongoSession.Copy()
 	defer s.Close()
 
@@ -38,9 +39,11 @@ func AddUser(user User, u string, e string, p string) error {
 		panic(err)
 	}
 
-	user.SetPassword(p)
-	user.Username = u
-	user.Email = e
+	user.SetPassword(password)
+	user.Username = username
+	user.Email = email
+	user.FirstName = firsname
+	user.LastName = lastname
 	user.Timestamp = time.Now()
 	err = c.Insert(&user)
 	// err := s.DB(database).C("users").Update("Username", &user)
