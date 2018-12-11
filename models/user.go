@@ -66,3 +66,14 @@ func FindUser(username string) (error, User) {
 
 	return nil, result
 }
+
+func GetMember() ([]User, error) {
+	s := mongoSession.Copy()
+	defer s.Close()
+
+	var results []User
+	err := s.DB(database).C("users").Find(nil).Sort("-timestamp").All(&results)
+
+	fmt.Println("Results All: ", results)
+	return results, err
+}

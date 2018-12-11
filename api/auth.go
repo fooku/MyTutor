@@ -6,7 +6,7 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/fooku/authBasic/models"
+	"github.com/fooku/LearnOnline_Api/models"
 	"github.com/labstack/echo"
 	mgo "gopkg.in/mgo.v2"
 )
@@ -33,8 +33,8 @@ func Login(c echo.Context) error {
 
 		// Set claims
 		claims := token.Claims.(jwt.MapClaims)
-		claims["name"] = "Jon Snow"
-		claims["admin"] = true
+		claims["name"] = u.Username
+		claims["admin"] = false
 		claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
 		// Generate encoded token and send it as response.

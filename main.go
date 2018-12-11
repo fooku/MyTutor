@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/fooku/authBasic/api"
-	"github.com/fooku/authBasic/models"
+	"github.com/fooku/LearnOnline_Api/api"
+	"github.com/fooku/LearnOnline_Api/models"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -39,6 +39,7 @@ func main() {
 	// Login route
 	e.POST("/login", api.Login)
 	e.POST("/register", api.Register)
+	e.GET("/list", api.ListMember)
 	// Unauthenticated route
 	e.GET("/", api.Accessible)
 
