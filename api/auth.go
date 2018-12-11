@@ -59,8 +59,10 @@ func Register(c echo.Context) error {
 
 	fmt.Println(u)
 	err = models.AddUser(user, u.Username, u.Email, u.Password, u.FirstName, u.LastName)
-
-	return err
+	if err != nil {
+		return err
+	}
+	return &echo.HTTPError{Code: http.StatusNoContent}
 }
 
 // Restricted > jwt
