@@ -1,4 +1,4 @@
-package: github.com/fooku/authBasic
+package: github.com/fooku/LearnOnline_Api
 import:
 - package: github.com/dgrijalva/jwt-go
   version: ^3.2.0
