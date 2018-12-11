@@ -39,7 +39,6 @@ func main() {
 	// Login route
 	e.POST("/login", api.Login)
 	e.POST("/register", api.Register)
-	e.GET("/list", api.ListMember)
 	// Unauthenticated route
 	e.GET("/", api.Accessible)
 
@@ -47,6 +46,7 @@ func main() {
 	r := e.Group("/restricted")
 	r.Use(middleware.JWT([]byte("secret")))
 	r.GET("", api.Restricted)
+	r.GET("/list", api.ListMember)
 
 	e.Logger.Fatal(e.Start(":" + port))
 }
