@@ -42,9 +42,10 @@ func Login(c echo.Context) error {
 		if err != nil {
 			return err
 		}
-		return c.JSON(http.StatusOK, map[string]string{
-			"token": t,
-		})
+		res := new(models.LoginResponse)
+		res.User = user
+		res.Token = t
+		return c.JSON(http.StatusOK, res)
 	}
 
 	return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid password"}
