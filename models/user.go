@@ -16,7 +16,6 @@ type User struct {
 	HasPassword
 	UserType        string `bson:"usertype"`
 	Email           string `bson:"email"`
-	Username        string `bson:"username"`
 	FirstName       string `bson:"firsname"`
 	LastName        string `bson:"lastname"`
 	NickName        string `bson:"nickname"`
@@ -44,7 +43,6 @@ func AddUser(user *User, u *RegisterRequest) error {
 	}
 
 	user.SetPassword(u.Password)
-	user.Username = u.Username
 	user.Email = u.Email
 	user.FirstName = u.FirstName
 	user.LastName = u.LastName
