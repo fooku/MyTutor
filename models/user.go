@@ -14,37 +14,46 @@ import (
 type User struct {
 	ID bson.ObjectId `bson:"_id,omitempty"`
 	HasPassword
-	UserType  string `bson:"usertype"`
-	Email     string `bson:"email"`
-	Username  string `bson:"username"`
-	FirstName string `bson:"firsname"`
-	LastName  string `bson:"lastname"`
-	Timestamp time.Time
+	UserType        string    `bson:"usertype"`
+	Email           string    `bson:"email"`
+	Username        string    `bson:"username"`
+	FirstName       string    `bson:"firsname"`
+	LastName        string    `bson:"lastname"`
+	NickName        string    `bson:"nickname"`
+	TelephoneNumber string    `bson:"telephonenumber"`
+	Address         string    `bson:"address"`
+	Birthday        time.Time `bson:"birthday"`
+	Timestamp       time.Time
 }
 
 // AddUser > insert data to mongoDB
-func AddUser(user User, username string, email string, password string, firsname string, lastname string) error {
+func AddUser(user *User, u *RegisterRequest) error {
 	s := mongoSession.Copy()
 	defer s.Close()
 
 	c := s.DB(database).C("users")
 
 	index := mgo.Index{
-		Key:    []string{"username", "email"},
+		Key:    []string{"telephonenumber"},
 		Unique: true,
 	}
 
 	err := c.EnsureIndex(index)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 
-	user.SetPassword(password)
-	user.Username = username
-	user.Email = email
-	user.FirstName = firsname
-	user.LastName = lastname
+	user.SetPassword(u.Password)
+	user.Username = u.Username
+	user.Email = u.Email
+	user.FirstName = u.FirstName
+	user.LastName = u.LastName
 	user.UserType = "member"
+	user.NickName = u.NickName
+	user.TelephoneNumber = u.TelephoneNumber
+	user.Address = u.Address
+	user.Birthday = time.Date(
+		u.Byear, time.Month(u.Bmonth), u.Bday, 0, 0, 0, 0, time.UTC)
 	user.Timestamp = time.Now()
 	err = c.Insert(&user)
 	// err := s.DB(database).C("users").Update("Username", &user)

@@ -58,11 +58,13 @@ func Register(c echo.Context) error {
 	err := c.Bind(u)
 
 	fmt.Println(u)
-	err = models.AddUser(user, u.Username, u.Email, u.Password, u.FirstName, u.LastName)
+	err = models.AddUser(&user, u)
 	if err != nil {
 		return err
 	}
-	return &echo.HTTPError{Code: http.StatusNoContent}
+	return c.JSON(http.StatusOK, map[string]string{
+		"Message": "Succeed",
+	})
 }
 
 // Restricted > jwt

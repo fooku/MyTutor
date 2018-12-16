@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	mongoURL = "mongodb://banana:banana1234@ds123834.mlab.com:23834/video_online"
+	mongoURL = "mongodb://test:test1234@ds135704.mlab.com:35704/gutututor"
 )
 
 func main() {

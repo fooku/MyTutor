@@ -6,7 +6,7 @@ import (
 
 var mongoSession *mgo.Session
 
-const database = "video_online"
+const database = "gutututor"
 
 // Init mongodb
 func Init(mongoURL string) error {
