@@ -51,8 +51,10 @@ func main() {
 	// Restricted group
 	r := e.Group("/restricted")
 	r.Use(middleware.JWT([]byte("secret")))
-	r.GET("", api.Restricted)
+	// r.GET("", api.Restricted)
+	r.GET("/auth", api.Restricted)
 	r.GET("/member", api.ListMember)
+	r.PUT("/member", api.UpdateMember)
 	r.DELETE("/member", api.DeleteMember)
 
 	e.Logger.Fatal(e.Start(":" + port))

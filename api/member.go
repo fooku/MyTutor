@@ -36,3 +36,18 @@ func DeleteMember(c echo.Context) error {
 		"Message": "Succeed",
 	})
 }
+
+//UpdateMember > แก้ไข User
+func UpdateMember(c echo.Context) error {
+	id := c.FormValue("id")
+	u := new(models.UpdateRequest)
+	err := c.Bind(u)
+	fmt.Println(id)
+	err = models.UpdateUserType(id, u.Usertype)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, map[string]string{
+		"Message": "Succeed",
+	})
+}

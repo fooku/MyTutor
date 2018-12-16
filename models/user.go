@@ -89,6 +89,20 @@ func GetMember() ([]User, error) {
 	return results, err
 }
 
+func GetMemberOne(id string) ([]User, error) {
+	if !bson.IsObjectIdHex(id) {
+		return nil, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	objectID := bson.ObjectIdHex(id)
+	s := mongoSession.Copy()
+	defer s.Close()
+
+	var results []User
+	err := s.DB(database).C("users").Find(bson.M{"_id": objectID}).All(&results)
+
+	return results, err
+}
+
 func DeleteMember(id string) error {
 	fmt.Println("id", id)
 	if !bson.IsObjectIdHex(id) {
@@ -101,5 +115,24 @@ func DeleteMember(id string) error {
 	if err != nil {
 		return &echo.HTTPError{Code: http.StatusNotFound, Message: "not found"}
 	}
+	return nil
+}
+
+func UpdateUserType(id string, usertype string) error {
+	fmt.Println("id", id)
+	if !bson.IsObjectIdHex(id) {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	objectID := bson.ObjectIdHex(id)
+	s := mongoSession.Copy()
+	defer s.Close()
+
+	colQuerier := bson.M{"_id": objectID}
+	change := bson.M{"$set": bson.M{"usertype": usertype}}
+	err := s.DB(database).C("users").Update(colQuerier, change)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	return nil
 }

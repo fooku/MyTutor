@@ -12,3 +12,12 @@ type RegisterRequest struct {
 	Bmonth          int    `json:"bmonth" form:"bmonth" query:"bmonth"`
 	Byear           int    `json:"byear" form:"byear" query:"byear"`
 }
+
+type LoginRequest struct {
+	Email    string `json:"email" form:"email" query:"email"`
+	Password string `json:"password" form:"password" query:"password"`
+}
+
+type UpdateRequest struct {
+	Usertype string `json:"usertype" form:"usertype" query:"usertype"`
+}

@@ -71,10 +71,11 @@ func Register(c echo.Context) error {
 func Restricted(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
-	name := claims["name"].(string)
-
+	id := claims["id"].(string)
+	u, err := models.GetMemberOne(id)
+	if err != nil {
+		return err
+	}
 	// เพิ่มคำร้อง
-
-	fmt.Println(name, claims["admin"])
-	return c.JSON(http.StatusOK, claims)
+	return c.JSON(http.StatusOK, u)
 }
