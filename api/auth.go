@@ -9,6 +9,7 @@ import (
 	"github.com/fooku/LearnOnline_Api/models"
 	"github.com/labstack/echo"
 	mgo "gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // Accessible > หน้าแรก
@@ -73,6 +74,9 @@ func Restricted(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	id := claims["id"].(string)
+	if !bson.IsObjectIdHex(id) {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
 	u, err := models.GetMemberOne(id)
 	if err != nil {
 		return err

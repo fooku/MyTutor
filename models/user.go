@@ -89,16 +89,13 @@ func GetMember() ([]User, error) {
 	return results, err
 }
 
-func GetMemberOne(id string) ([]User, error) {
-	if !bson.IsObjectIdHex(id) {
-		return nil, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
-	}
+func GetMemberOne(id string) (User, error) {
 	objectID := bson.ObjectIdHex(id)
 	s := mongoSession.Copy()
 	defer s.Close()
 
-	var results []User
-	err := s.DB(database).C("users").Find(bson.M{"_id": objectID}).All(&results)
+	var results User
+	err := s.DB(database).C("users").Find(bson.M{"_id": objectID}).One(&results)
 
 	return results, err
 }
