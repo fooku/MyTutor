@@ -14,15 +14,15 @@ import (
 type User struct {
 	ID bson.ObjectId `bson:"_id,omitempty"`
 	HasPassword
-	UserType        string    `bson:"usertype"`
-	Email           string    `bson:"email"`
-	Username        string    `bson:"username"`
-	FirstName       string    `bson:"firsname"`
-	LastName        string    `bson:"lastname"`
-	NickName        string    `bson:"nickname"`
-	TelephoneNumber string    `bson:"telephonenumber"`
-	Address         string    `bson:"address"`
-	Birthday        time.Time `bson:"birthday"`
+	UserType        string `bson:"usertype"`
+	Email           string `bson:"email"`
+	Username        string `bson:"username"`
+	FirstName       string `bson:"firsname"`
+	LastName        string `bson:"lastname"`
+	NickName        string `bson:"nickname"`
+	TelephoneNumber string `bson:"telephonenumber"`
+	Address         string `bson:"address"`
+	Birthday        time.Time
 	Timestamp       time.Time
 }
 
