@@ -14,7 +14,7 @@ func ListMember(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 
-	if !claims["admin"].(bool) {
+	if claims["UserType"] != "admin" {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
 	}
 	u, err := models.GetMember()
