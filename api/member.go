@@ -27,6 +27,12 @@ func ListMember(c echo.Context) error {
 
 // DeleteMember > ลบสมาชิก
 func DeleteMember(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
 	id := c.FormValue("id")
 	fmt.Println(id)
 	err := service.DeleteMember(id)
@@ -40,6 +46,12 @@ func DeleteMember(c echo.Context) error {
 
 //UpdateMember > แก้ไข User
 func UpdateMember(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
 	id := c.FormValue("id")
 	u := new(models.UpdateRequest)
 	err := c.Bind(u)

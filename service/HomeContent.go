@@ -16,13 +16,30 @@ func AddHomeContent(ahc models.AddHomeContent) error {
 	return nil
 }
 
-func GetHomeContentFirst() ([]models.HomeContentFirst, error) {
+func GetHomeContent() (*models.HomeContent, error) {
+	content := new(models.HomeContent)
 	s := models.MongoSession.Copy()
 	defer s.Close()
 
-	var results []models.HomeContentFirst
-	err := s.DB(models.Database).C("homecontentfirst").Find(nil).All(&results)
+	var first []models.HomeContentFirst
+	var second []models.HomeContentSecond
+	var third []models.HomeContentThird
+	err := s.DB(models.Database).C("homecontentfirst").Find(nil).All(&first)
+	if err != nil {
+		return content, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+	}
+	err = s.DB(models.Database).C("homecontentfirst").Find(nil).All(&second)
+	if err != nil {
+		return content, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+	}
+	err = s.DB(models.Database).C("homecontentfirst").Find(nil).All(&third)
+	if err != nil {
+		return content, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+	}
+	content.HomeContentFirst = first
+	content.HomeContentSecond = second
+	content.HomeContentThird = third
 
-	fmt.Println("Results All: ", results)
-	return results, err
+	fmt.Println("Results HomeContent: ", content)
+	return content, err
 }

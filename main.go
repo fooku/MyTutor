@@ -57,6 +57,7 @@ func main() {
 	r.PUT("/member/usertype", api.UpdateMember)
 	r.DELETE("/member", api.DeleteMember)
 
+	r.GET("/homecontent", api.ListHomeContent)
 	r.POST("/homecontentfirst", api.AddContenFirst)
 	r.POST("/homecontentsecond", api.AddContenSecond)
 	r.POST("/homecontentthird", api.AddContenThird)

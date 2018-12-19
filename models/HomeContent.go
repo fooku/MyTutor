@@ -4,6 +4,12 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+type HomeContent struct {
+	HomeContentFirst  []HomeContentFirst  `json:"homecontentfirst"`
+	HomeContentSecond []HomeContentSecond `json:"homecontentsecond"`
+	HomeContentThird  []HomeContentThird  `json:"homecontentthird"`
+}
+
 // Collection: HomeContentFirst
 // contentnumber ระบุลำดับการแสดงผลของเนื้อหา
 // title ระบุหัวข้อของContent
