@@ -26,22 +26,6 @@ func AddContenFirst(c echo.Context) error {
 		"Message": "Succeed",
 	})
 }
-func AddContenSecond(c echo.Context) error {
-	hcfr := new(models.HomeContentSecond)
-	err := c.Bind(hcfr)
-	fmt.Println(hcfr)
-	if err != nil {
-		return err
-	}
-
-	err = service.AddHomeContent(hcfr)
-	if err != nil {
-		return err
-	}
-	return c.JSON(http.StatusOK, map[string]string{
-		"Message": "Succeed",
-	})
-}
 
 func AddContenThird(c echo.Context) error {
 	hcfr := new(models.HomeContentThird)

@@ -59,7 +59,6 @@ func main() {
 
 	r.GET("/homecontent", api.ListHomeContent)
 	r.POST("/homecontentfirst", api.AddContenFirst)
-	r.POST("/homecontentsecond", api.AddContenSecond)
 	r.POST("/homecontentthird", api.AddContenThird)
 
 	e.Logger.Fatal(e.Start(":" + port))

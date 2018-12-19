@@ -68,16 +68,6 @@ func (cf *HomeContentFirst) AddContent() error {
 	return err
 }
 
-func (cs *HomeContentSecond) AddContent() error {
-	s := MongoSession.Copy()
-	defer s.Close()
-
-	c := s.DB(Database).C("homecontentsecond")
-
-	err := c.Insert(&cs)
-	return err
-}
-
 func (ct *HomeContentThird) AddContent() error {
 	s := MongoSession.Copy()
 	defer s.Close()
