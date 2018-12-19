@@ -47,7 +47,7 @@ func main() {
 	e.POST("/register", api.Register)
 	// Unauthenticated route
 	e.GET("/", api.Accessible)
-
+	e.GET("/homecontent", api.ListHomeContent)
 	// Restricted group
 	r := e.Group("/restricted")
 	r.Use(middleware.JWT([]byte("secret")))
@@ -57,7 +57,6 @@ func main() {
 	r.PUT("/member/usertype", api.UpdateMember)
 	r.DELETE("/member", api.DeleteMember)
 
-	r.GET("/homecontent", api.ListHomeContent)
 	r.POST("/homecontentfirst", api.AddContenFirst)
 	r.POST("/homecontentthird", api.AddContenThird)
 
