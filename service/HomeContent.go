@@ -28,11 +28,11 @@ func GetHomeContent() (*models.HomeContent, error) {
 	if err != nil {
 		return content, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
 	}
-	err = s.DB(models.Database).C("homecontentfirst").Find(nil).All(&second)
+	err = s.DB(models.Database).C("homecontentsecond").Find(nil).All(&second)
 	if err != nil {
 		return content, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
 	}
-	err = s.DB(models.Database).C("homecontentfirst").Find(nil).All(&third)
+	err = s.DB(models.Database).C("homecontentthird").Find(nil).All(&third)
 	if err != nil {
 		return content, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
 	}
