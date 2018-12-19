@@ -7,6 +7,7 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/fooku/LearnOnline_Api/models"
+	"github.com/fooku/LearnOnline_Api/service"
 	"github.com/labstack/echo"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -22,7 +23,7 @@ func Login(c echo.Context) error {
 	u := new(models.LoginRequest)
 	err := c.Bind(u)
 
-	err, user := models.FindUser(u.Email)
+	err, user := service.FindUser(u.Email)
 
 	if err == mgo.ErrNotFound {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid email"}
@@ -60,7 +61,7 @@ func Register(c echo.Context) error {
 	err := c.Bind(u)
 
 	fmt.Println(u)
-	err = models.AddUser(&user, u)
+	err = service.AddUser(&user, u)
 	if err != nil {
 		return err
 	}
@@ -77,7 +78,7 @@ func Restricted(c echo.Context) error {
 	if !bson.IsObjectIdHex(id) {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
 	}
-	u, err := models.GetMemberOne(id)
+	u, err := service.GetMemberOne(id)
 	if err != nil {
 		return err
 	}

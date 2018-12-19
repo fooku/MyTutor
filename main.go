@@ -54,8 +54,12 @@ func main() {
 	// r.GET("", api.Restricted)
 	r.GET("/auth", api.Restricted)
 	r.GET("/member", api.ListMember)
-	r.PUT("/member", api.UpdateMember)
+	r.PUT("/member/usertype", api.UpdateMember)
 	r.DELETE("/member", api.DeleteMember)
+
+	r.POST("/homecontentfirst", api.AddContenFirst)
+	r.POST("/homecontentsecond", api.AddContenSecond)
+	r.POST("/homecontentthird", api.AddContenThird)
 
 	e.Logger.Fatal(e.Start(":" + port))
 }

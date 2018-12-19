@@ -6,6 +6,7 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/fooku/LearnOnline_Api/models"
+	"github.com/fooku/LearnOnline_Api/service"
 	"github.com/labstack/echo"
 )
 
@@ -17,7 +18,7 @@ func ListMember(c echo.Context) error {
 	if claims["UserType"] != "admin" {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
 	}
-	u, err := models.GetMember()
+	u, err := service.GetMember()
 	if err != nil {
 		return err
 	}
@@ -28,7 +29,7 @@ func ListMember(c echo.Context) error {
 func DeleteMember(c echo.Context) error {
 	id := c.FormValue("id")
 	fmt.Println(id)
-	err := models.DeleteMember(id)
+	err := service.DeleteMember(id)
 	if err != nil {
 		return err
 	}
@@ -43,7 +44,7 @@ func UpdateMember(c echo.Context) error {
 	u := new(models.UpdateRequest)
 	err := c.Bind(u)
 	fmt.Println(id)
-	err = models.UpdateUserType(id, u.Usertype)
+	err = service.UpdateUserType(id, u.Usertype)
 	if err != nil {
 		return err
 	}
