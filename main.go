@@ -60,6 +60,11 @@ func main() {
 
 	r.POST("/homecontentfirst", api.AddContenFirst)
 	r.POST("/homecontentthird", api.AddContenThird)
+	r.PUT("/homecontentfirst", api.UpdateHomeContentFirst)
+	r.PUT("/homecontentsecond", api.UpdateHomeContentSecond)
+	r.PUT("/homecontentthird", api.UpdateHomeContentThird)
+	r.DELETE("/homecontentfirst", api.DeleteHomeContentFirst)
+	r.DELETE("/homecontentthird", api.DeleteHomeContentThird)
 
 	r.POST("/news", api.AddNews)
 	r.PUT("/news", api.UpdateNews)

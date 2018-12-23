@@ -16,6 +16,22 @@ func AddHomeContent(ahc models.AddHomeContent) error {
 	return nil
 }
 
+func UpdateHomeContent(ahc models.UpdateHomeContent, id string) error {
+	err := ahc.UpdateContent(id)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+	}
+	return nil
+}
+
+func DeleteHomeContent(ahc models.AddHomeContent, id string) error {
+	err := ahc.DeleteContent(id)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+	}
+	return nil
+}
+
 func GetHomeContent() (*models.HomeContent, error) {
 	content := new(models.HomeContent)
 	s := models.MongoSession.Copy()
