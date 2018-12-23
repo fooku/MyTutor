@@ -49,5 +49,4 @@ func ListHomeContent(c echo.Context) error {
 		return err
 	}
 	return c.JSON(http.StatusOK, hc)
-
 }
