@@ -23,7 +23,7 @@ type HomeContent struct {
 // HomeContentFirst >> slind img content
 type HomeContentFirst struct {
 	ID            bson.ObjectId `bson:"_id,omitempty"`
-	ContentNumber uint8         `bson:"contentnumber" `
+	ContentNumber int           `bson:"contentnumber" `
 	Title         string        `bson:"title" `
 	Detail        string        `bson:"detail" `
 	Thumbnail     string        `bson:"thumbnail" `
@@ -71,7 +71,13 @@ func (cf *HomeContentFirst) AddContent() error {
 
 	c := s.DB(Database).C("homecontentfirst")
 
-	err := c.Insert(&cf)
+	var first []HomeContentFirst
+	err := c.Find(nil).All(&first)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+	}
+	cf.ContentNumber = len(first) + 1
+	err = c.Insert(&cf)
 
 	return err
 }
@@ -135,7 +141,34 @@ func (cf *HomeContentFirst) DeleteContent(id string) error {
 	s := MongoSession.Copy()
 	defer s.Close()
 
-	err := s.DB(Database).C("homecontentfirst").RemoveId(objectID)
+	var first HomeContentFirst
+	err := s.DB(Database).C("homecontentfirst").Find(bson.M{"_id": objectID}).One(&first)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+	}
+
+	cn := first.ContentNumber
+	var firstAll []HomeContentFirst
+	err = s.DB(Database).C("homecontentfirst").Find(nil).All(&firstAll)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+	}
+
+	err = s.DB(Database).C("homecontentfirst").RemoveId(objectID)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+	}
+	for index, data := range firstAll {
+		if index >= cn {
+			colQuerier := bson.M{"_id": data.ID}
+			change := bson.M{"$set": bson.M{"contentnumber": data.ContentNumber - 1}}
+			err = s.DB(Database).C("homecontentfirst").Update(colQuerier, change)
+			if err != nil {
+				return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+			}
+		}
+	}
+
 	return err
 }
 func (ct *HomeContentThird) DeleteContent(id string) error {
