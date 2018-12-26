@@ -49,6 +49,7 @@ func main() {
 	e.GET("/", api.Accessible)
 	e.GET("/homecontent", api.ListHomeContent)
 	e.GET("/news", api.ListNews)
+	e.GET("/promotion", api.ListPromotion)
 	// Restricted group
 	r := e.Group("/restricted")
 	r.Use(middleware.JWT([]byte("secret")))
@@ -69,6 +70,10 @@ func main() {
 	r.POST("/news", api.AddNews)
 	r.PUT("/news", api.UpdateNews)
 	r.DELETE("/news", api.DeleteNews)
+
+	r.POST("/promotion", api.AddPromotion)
+	r.PUT("/promotion", api.UpdatePromotion)
+	r.DELETE("/promotion", api.DeletePromotion)
 
 	e.Logger.Fatal(e.Start(":" + port))
 }

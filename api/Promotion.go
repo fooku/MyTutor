@@ -10,21 +10,22 @@ import (
 	"github.com/labstack/echo"
 )
 
-func AddNews(c echo.Context) error {
+func AddPromotion(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 
 	if claims["UserType"] != "admin" {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
 	}
-	news := new(models.News)
-	err := c.Bind(news)
-	fmt.Println(news)
+
+	pr := new(models.Promotion)
+	err := c.Bind(pr)
+	fmt.Println(pr)
 	if err != nil {
 		return err
 	}
 
-	err = service.AddNews(news)
+	err = service.AddPromotion(pr)
 	if err != nil {
 		return err
 	}
@@ -33,26 +34,26 @@ func AddNews(c echo.Context) error {
 	})
 }
 
-func ListNews(c echo.Context) error {
-	news, err := service.ListNews()
+func ListPromotion(c echo.Context) error {
+	pr, err := service.ListPromotion()
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, news)
+	return c.JSON(http.StatusOK, pr)
 }
 
-func UpdateNews(c echo.Context) error {
+func UpdatePromotion(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 
 	if claims["UserType"] != "admin" {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
 	}
+
 	id := c.FormValue("id")
-	news := new(models.News)
-	err := c.Bind(news)
-	fmt.Println(id)
-	err = service.UpdateNews(id, news)
+	pr := new(models.Promotion)
+	err := c.Bind(pr)
+	err = service.UpdatePromotion(id, pr)
 	if err != nil {
 		return err
 	}
@@ -61,7 +62,7 @@ func UpdateNews(c echo.Context) error {
 	})
 }
 
-func DeleteNews(c echo.Context) error {
+func DeletePromotion(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 
@@ -69,8 +70,8 @@ func DeleteNews(c echo.Context) error {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
 	}
 	id := c.FormValue("id")
-	fmt.Println("id", id)
-	err := service.DeleteNews(id)
+
+	err := service.DeletePromotion(id)
 	if err != nil {
 		return err
 	}
