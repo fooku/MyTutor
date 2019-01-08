@@ -45,7 +45,7 @@ func DeleteMember(c echo.Context) error {
 }
 
 //UpdateMember > แก้ไข User
-func UpdateMember(c echo.Context) error {
+func UpdateMemberUsertype(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 
@@ -57,6 +57,26 @@ func UpdateMember(c echo.Context) error {
 	err := c.Bind(u)
 	fmt.Println(id)
 	err = service.UpdateUserType(id, u.Usertype)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, map[string]string{
+		"Message": "Succeed",
+	})
+}
+
+func UpdateMember(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+	id := c.FormValue("id")
+	u := new(models.RegisterRequest)
+	err := c.Bind(u)
+	fmt.Println(id)
+	err = service.UpdateMember(id, u)
 	if err != nil {
 		return err
 	}

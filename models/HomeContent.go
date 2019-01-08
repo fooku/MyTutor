@@ -61,6 +61,7 @@ type AddHomeContent interface {
 	AddContent() error
 	DeleteContent(string) error
 }
+
 type UpdateHomeContent interface {
 	UpdateContent(string) error
 }

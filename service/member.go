@@ -64,3 +64,22 @@ func UpdateUserType(id string, usertype string) error {
 
 	return nil
 }
+
+func UpdateMember(id string, u *models.RegisterRequest) error {
+	fmt.Println("id", id)
+	if !bson.IsObjectIdHex(id) {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	objectID := bson.ObjectIdHex(id)
+	s := models.MongoSession.Copy()
+	defer s.Close()
+
+	colQuerier := bson.M{"_id": objectID}
+	change := bson.M{"$set": bson.M{"email": u.Email, "password": u.Password}}
+	err := s.DB(models.Database).C("users").Update(colQuerier, change)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return nil
+}

@@ -70,3 +70,14 @@ func DeletePromotion(id string) error {
 	}
 	return nil
 }
+
+func GetPromotionOne(id string) (models.Promotion, error) {
+	objectID := bson.ObjectIdHex(id)
+	s := models.MongoSession.Copy()
+	defer s.Close()
+
+	var results models.Promotion
+	err := s.DB(models.Database).C("promotion").Find(bson.M{"_id": objectID}).One(&results)
+
+	return results, err
+}

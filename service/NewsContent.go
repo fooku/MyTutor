@@ -70,3 +70,14 @@ func DeleteNews(id string) error {
 	}
 	return nil
 }
+
+func GetNewsOne(id string) (models.News, error) {
+	objectID := bson.ObjectIdHex(id)
+	s := models.MongoSession.Copy()
+	defer s.Close()
+
+	var results models.News
+	err := s.DB(models.Database).C("news").Find(bson.M{"_id": objectID}).One(&results)
+
+	return results, err
+}

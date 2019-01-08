@@ -158,3 +158,54 @@ func DeleteHomeContentThird(c echo.Context) error {
 		"Message": "Succeed",
 	})
 }
+
+func GetOneFirst(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+	id := c.FormValue("id")
+	fmt.Println()
+	fmt.Println("id", id)
+	fmt.Println()
+
+	n, err := service.GetOneHomeContentF(id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, n)
+}
+func GetOneSecond(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+	id := c.FormValue("id")
+	fmt.Println(id)
+
+	n, err := service.GetOneHomeContentS(id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, n)
+}
+func GetOneThird(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+	id := c.FormValue("id")
+	fmt.Println(id)
+
+	n, err := service.GetOneHomeContentT(id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, n)
+}

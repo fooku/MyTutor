@@ -56,8 +56,13 @@ func main() {
 	// r.GET("", api.Restricted)
 	r.GET("/auth", api.Restricted)
 	r.GET("/member", api.ListMember)
-	r.PUT("/member/usertype", api.UpdateMember)
+	r.PUT("/member/usertype", api.UpdateMemberUsertype)
+	r.PUT("/member", api.UpdateMember)
 	r.DELETE("/member", api.DeleteMember)
+
+	r.GET("/homecontentfirstone", api.GetOneFirst)
+	r.GET("/homecontentsecondone", api.GetOneSecond)
+	r.GET("/homecontentthirdone", api.GetOneThird)
 
 	r.POST("/homecontentfirst", api.AddContenFirst)
 	r.POST("/homecontentthird", api.AddContenThird)
@@ -67,10 +72,12 @@ func main() {
 	r.DELETE("/homecontentfirst", api.DeleteHomeContentFirst)
 	r.DELETE("/homecontentthird", api.DeleteHomeContentThird)
 
+	r.GET("/newsone", api.GetNews)
 	r.POST("/news", api.AddNews)
 	r.PUT("/news", api.UpdateNews)
 	r.DELETE("/news", api.DeleteNews)
 
+	r.GET("/promotionone", api.GetPromotion)
 	r.POST("/promotion", api.AddPromotion)
 	r.PUT("/promotion", api.UpdatePromotion)
 	r.DELETE("/promotion", api.DeletePromotion)
