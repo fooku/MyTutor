@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -32,7 +31,7 @@ func main() {
 	// Middleware
 	e.Use(middleware.BodyDumpWithConfig(middleware.BodyDumpConfig{
 		Handler: func(c echo.Context, reqBody, resBody []byte) {
-			fmt.Println("Request >>>", c.Request())
+			// fmt.Println("Request >>>", c.Request())
 		},
 	}))
 
@@ -81,6 +80,13 @@ func main() {
 	r.POST("/promotion", api.AddPromotion)
 	r.PUT("/promotion", api.UpdatePromotion)
 	r.DELETE("/promotion", api.DeletePromotion)
+
+	r.GET("/course", api.ListCourse)
+	r.POST("/course", api.AddCourse)
+
+	r.POST("/section", api.AddSection)
+
+	r.POST("/lectures", api.AddLectures)
 
 	e.Logger.Fatal(e.Start(":" + port))
 }
