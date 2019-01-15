@@ -67,6 +67,8 @@ func ListCourse() (*[]models.Course, error) {
 		courses[i].Hour = course.Hour
 		courses[i].Creator = user
 		courses[i].Price = course.Price
+		courses[i].Thumbnail = course.Thumbnail
+		courses[i].Detail = course.Detail
 
 		section := make([]models.Section, len(course.Section))
 		for j, sec := range course.Section {
@@ -94,6 +96,37 @@ func ListCourse() (*[]models.Course, error) {
 		if err != nil {
 			return &courses, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
 		}
+	}
+
+	return &courses, nil
+}
+
+func GetCourse() (*[]models.Course, error) {
+	s := models.MongoSession.Copy()
+	defer s.Close()
+
+	var cci []models.CourseInsert
+
+	err := s.DB(models.Database).C("course").Find(nil).All(&cci)
+	if err != nil {
+		return nil, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+	}
+	courses := make([]models.Course, len(cci))
+	for i, course := range cci {
+		var user models.User
+		objectID := course.Creator
+		err = s.DB(models.Database).C("users").Find(bson.M{"_id": objectID}).One(&user)
+		if err != nil {
+			return &courses, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+		}
+
+		courses[i].ID = course.ID
+		courses[i].Name = course.Name
+		courses[i].Hour = course.Hour
+		courses[i].Creator = user
+		courses[i].Price = course.Price
+		courses[i].Thumbnail = course.Thumbnail
+		courses[i].Detail = course.Detail
 	}
 
 	return &courses, nil

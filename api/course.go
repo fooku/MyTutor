@@ -39,8 +39,16 @@ func AddCourse(c echo.Context) error {
 	})
 }
 
-func ListCourse(c echo.Context) error {
+func ListCourseAll(c echo.Context) error {
 	course, err := service.ListCourse()
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, course)
+}
+
+func ListCourse(c echo.Context) error {
+	course, err := service.GetCourse()
 	if err != nil {
 		return err
 	}

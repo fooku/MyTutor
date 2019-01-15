@@ -81,6 +81,7 @@ func main() {
 	r.PUT("/promotion", api.UpdatePromotion)
 	r.DELETE("/promotion", api.DeletePromotion)
 
+	r.GET("/courseall", api.ListCourseAll)
 	r.GET("/course", api.ListCourse)
 	r.POST("/course", api.AddCourse)
 
