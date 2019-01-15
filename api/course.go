@@ -8,6 +8,7 @@ import (
 	"github.com/fooku/LearnOnline_Api/models"
 	"github.com/fooku/LearnOnline_Api/service"
 	"github.com/labstack/echo"
+	"gopkg.in/mgo.v2/bson"
 )
 
 func AddCourse(c echo.Context) error {
@@ -26,6 +27,7 @@ func AddCourse(c echo.Context) error {
 	if err != nil {
 		return err
 	}
+	course.Creator = bson.ObjectIdHex(claims["id"].(string))
 
 	err = service.AddCourse(course)
 	if err != nil {
