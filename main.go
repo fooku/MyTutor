@@ -49,6 +49,7 @@ func main() {
 	e.GET("/homecontent", api.ListHomeContent)
 	e.GET("/news", api.ListNews)
 	e.GET("/promotion", api.ListPromotion)
+	e.GET("/course", api.ListCourse)
 	// Restricted group
 	r := e.Group("/restricted")
 	r.Use(middleware.JWT([]byte("secret")))
@@ -82,7 +83,6 @@ func main() {
 	r.DELETE("/promotion", api.DeletePromotion)
 
 	r.GET("/courseall", api.ListCourseAll)
-	r.GET("/course", api.ListCourse)
 	r.POST("/course", api.AddCourse)
 
 	r.POST("/section", api.AddSection)
