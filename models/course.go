@@ -13,6 +13,7 @@ type Course struct {
 	Creator User          `json:"creator" son:"creator" `
 	Price   string        `json:"price" bson:"price" `
 
+	Type      string `json:"type" bson:"type" `
 	Detail    string `json:"detail" bson:"detail" `
 	Thumbnail string `json:"thumbnail" bson:"thumbnail" `
 
@@ -27,6 +28,7 @@ type CourseInsert struct {
 	Creator bson.ObjectId `json:"creator" son:"creator" `
 	Price   string        `json:"price" bson:"price" `
 
+	Type      string `json:"type" bson:"type" `
 	Detail    string `json:"detail" bson:"detail" `
 	Thumbnail string ` json:"thumbnail" bson:"thumbnail" `
 

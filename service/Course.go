@@ -69,6 +69,7 @@ func ListCourse() (*[]models.Course, error) {
 		courses[i].Price = course.Price
 		courses[i].Thumbnail = course.Thumbnail
 		courses[i].Detail = course.Detail
+		courses[i].Type = course.Type
 
 		section := make([]models.Section, len(course.Section))
 		for j, sec := range course.Section {
@@ -127,6 +128,7 @@ func GetCourse() (*[]models.Course, error) {
 		courses[i].Price = course.Price
 		courses[i].Thumbnail = course.Thumbnail
 		courses[i].Detail = course.Detail
+		courses[i].Type = course.Type
 	}
 
 	return &courses, nil
