@@ -40,6 +40,12 @@ func AddCourse(c echo.Context) error {
 }
 
 func ListCourseAll(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
 	course, err := service.ListCourse()
 	if err != nil {
 		return err
@@ -49,6 +55,22 @@ func ListCourseAll(c echo.Context) error {
 
 func ListCourse(c echo.Context) error {
 	course, err := service.GetCourse()
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, course)
+}
+
+func ListCourseOne(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+	id := c.FormValue("id")
+
+	course, err := service.GetCourseOne(id)
 	if err != nil {
 		return err
 	}

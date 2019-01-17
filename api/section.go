@@ -37,3 +37,19 @@ func AddSection(c echo.Context) error {
 		"Message": "Succeed",
 	})
 }
+
+func GetSectionOne(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+	id := c.FormValue("id")
+
+	section, err := service.GetSectionOne(id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, section)
+}

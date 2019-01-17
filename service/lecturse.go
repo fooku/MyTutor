@@ -43,3 +43,20 @@ func AddLectures(lecturse *models.Lectures, id string) error {
 
 	return nil
 }
+
+func GetLecturesOne(id string) (*models.Lectures, error) {
+	s := models.MongoSession.Copy()
+	defer s.Close()
+	if !bson.IsObjectIdHex(id) {
+		return nil, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	Obid := bson.ObjectIdHex(id)
+	var lec models.Lectures
+
+	err := s.DB(models.Database).C("lectures").Find(bson.M{"_id": Obid}).One(&lec)
+	if err != nil {
+		return nil, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "หาlectures one ไม่เจอ"}
+	}
+
+	return &lec, nil
+}

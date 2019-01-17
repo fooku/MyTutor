@@ -72,6 +72,8 @@ func ListCourse() (*[]models.Course, error) {
 		courses[i].Type = course.Type
 
 		section := make([]models.Section, len(course.Section))
+		fmt.Println(len(course.Section))
+		fmt.Println(course.Section)
 		for j, sec := range course.Section {
 			si := new(models.SectionInsert)
 			err = s.DB(models.Database).C("section").Find(bson.M{"_id": sec}).One(&si)
@@ -132,4 +134,38 @@ func GetCourse() (*[]models.Course, error) {
 	}
 
 	return &courses, nil
+}
+
+func GetCourseOne(id string) (*models.Course, error) {
+	s := models.MongoSession.Copy()
+	defer s.Close()
+	if !bson.IsObjectIdHex(id) {
+		return nil, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	idCci := bson.ObjectIdHex(id)
+	var cci models.CourseInsert
+
+	err := s.DB(models.Database).C("course").Find(bson.M{"_id": idCci}).One(&cci)
+	if err != nil {
+		return nil, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "หาCourse one ไม่ได้"}
+	}
+	courses := new(models.Course)
+
+	var user models.User
+	objectID := cci.Creator
+	err = s.DB(models.Database).C("users").Find(bson.M{"_id": objectID}).One(&user)
+	if err != nil {
+		return courses, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "หาUser one ไม่ได้"}
+	}
+
+	courses.ID = cci.ID
+	courses.Name = cci.Name
+	courses.Hour = cci.Hour
+	courses.Creator = user
+	courses.Price = cci.Price
+	courses.Thumbnail = cci.Thumbnail
+	courses.Detail = cci.Detail
+	courses.Type = cci.Type
+
+	return courses, nil
 }

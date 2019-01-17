@@ -83,10 +83,13 @@ func main() {
 	r.DELETE("/promotion", api.DeletePromotion)
 
 	r.GET("/courseall", api.ListCourseAll)
+	r.GET("/courseone", api.ListCourseOne)
 	r.POST("/course", api.AddCourse)
 
+	r.GET("/sectionone", api.GetSectionOne)
 	r.POST("/section", api.AddSection)
 
+	r.GET("/lecturesone", api.ListLecturesOne)
 	r.POST("/lectures", api.AddLectures)
 
 	e.Logger.Fatal(e.Start(":" + port))

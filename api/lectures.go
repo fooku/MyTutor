@@ -37,3 +37,19 @@ func AddLectures(c echo.Context) error {
 		"Message": "Succeed",
 	})
 }
+
+func ListLecturesOne(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+	id := c.FormValue("id")
+
+	lec, err := service.GetLecturesOne(id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, lec)
+}

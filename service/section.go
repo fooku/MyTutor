@@ -43,3 +43,24 @@ func AddSection(section *models.SectionInsert, id string) error {
 
 	return nil
 }
+
+func GetSectionOne(id string) (*models.Section, error) {
+	s := models.MongoSession.Copy()
+	defer s.Close()
+	if !bson.IsObjectIdHex(id) {
+		return nil, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	idSection := bson.ObjectIdHex(id)
+	var sectionIn models.SectionInsert
+
+	err := s.DB(models.Database).C("section").Find(bson.M{"_id": idSection}).One(&sectionIn)
+	if err != nil {
+		return nil, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+	}
+	section := new(models.Section)
+
+	section.ID = sectionIn.ID
+	section.Name = sectionIn.Name
+
+	return section, nil
+}
