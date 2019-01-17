@@ -64,3 +64,21 @@ func GetSectionOne(id string) (*models.Section, error) {
 
 	return section, nil
 }
+func UpdateSection(id string, section *models.SectionInsert) error {
+	fmt.Println("id", id)
+	if !bson.IsObjectIdHex(id) {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	objectID := bson.ObjectIdHex(id)
+	s := models.MongoSession.Copy()
+	defer s.Close()
+
+	colQuerier := bson.M{"_id": objectID}
+	change := bson.M{"$set": bson.M{"name": section.Name}}
+	err := s.DB(models.Database).C("section").Update(colQuerier, change)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return nil
+}

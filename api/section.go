@@ -53,3 +53,23 @@ func GetSectionOne(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, section)
 }
+
+func UpdateSection(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+	id := c.FormValue("id")
+	section := new(models.SectionInsert)
+	err := c.Bind(section)
+	fmt.Println(id)
+	err = service.UpdateSection(id, section)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, map[string]string{
+		"Message": "Succeed",
+	})
+}

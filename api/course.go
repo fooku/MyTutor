@@ -76,3 +76,23 @@ func ListCourseOne(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, course)
 }
+
+func UpdateCourse(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+	id := c.FormValue("id")
+	course := new(models.CourseInsert)
+	err := c.Bind(course)
+	fmt.Println(id)
+	err = service.UpdateCourse(id, course)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, map[string]string{
+		"Message": "Succeed",
+	})
+}

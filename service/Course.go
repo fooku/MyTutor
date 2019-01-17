@@ -169,3 +169,24 @@ func GetCourseOne(id string) (*models.Course, error) {
 
 	return courses, nil
 }
+
+func UpdateCourse(id string, course *models.CourseInsert) error {
+	fmt.Println("id", id)
+	if !bson.IsObjectIdHex(id) {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	objectID := bson.ObjectIdHex(id)
+	s := models.MongoSession.Copy()
+	defer s.Close()
+
+	colQuerier := bson.M{"_id": objectID}
+	change := bson.M{"$set": bson.M{"name": course.Name, "hour": course.Hour,
+		"price": course.Price, "type": course.Type, "detail": course.Detail,
+		"thumbnail": course.Thumbnail}}
+	err := s.DB(models.Database).C("course").Update(colQuerier, change)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return nil
+}

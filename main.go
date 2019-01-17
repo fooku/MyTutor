@@ -85,9 +85,11 @@ func main() {
 	r.GET("/courseall", api.ListCourseAll)
 	r.GET("/courseone", api.ListCourseOne)
 	r.POST("/course", api.AddCourse)
+	r.PUT("/course", api.UpdateCourse)
 
 	r.GET("/sectionone", api.GetSectionOne)
 	r.POST("/section", api.AddSection)
+	r.PUT("/section", api.UpdateSection)
 
 	r.GET("/lecturesone", api.ListLecturesOne)
 	r.POST("/lectures", api.AddLectures)
