@@ -93,6 +93,7 @@ func main() {
 
 	r.GET("/lecturesone", api.ListLecturesOne)
 	r.POST("/lectures", api.AddLectures)
+	r.PUT("/lectures", api.UpdateLectures)
 
 	e.Logger.Fatal(e.Start(":" + port))
 }

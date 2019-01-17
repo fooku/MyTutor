@@ -60,3 +60,23 @@ func GetLecturesOne(id string) (*models.Lectures, error) {
 
 	return &lec, nil
 }
+
+func UpdateLectures(id string, lectures *models.Lectures) error {
+	fmt.Println("id", id)
+	if !bson.IsObjectIdHex(id) {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	objectID := bson.ObjectIdHex(id)
+	s := models.MongoSession.Copy()
+	defer s.Close()
+
+	colQuerier := bson.M{"_id": objectID}
+	fmt.Println(lectures)
+	change := bson.M{"$set": bson.M{"name": lectures.Name, "time": lectures.Time, "link": lectures.Link}}
+	err := s.DB(models.Database).C("lectures").Update(colQuerier, change)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "Update lecturesไม่ได้"}
+	}
+
+	return nil
+}

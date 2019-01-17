@@ -53,3 +53,24 @@ func ListLecturesOne(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, lec)
 }
+
+func UpdateLectures(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+	id := c.FormValue("id")
+	lectures := new(models.Lectures)
+	err := c.Bind(lectures)
+	fmt.Println(id)
+	fmt.Println(lectures.Name)
+	err = service.UpdateLectures(id, lectures)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, map[string]string{
+		"Message": "Succeed",
+	})
+}

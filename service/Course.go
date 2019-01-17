@@ -167,6 +167,35 @@ func GetCourseOne(id string) (*models.Course, error) {
 	courses.Detail = cci.Detail
 	courses.Type = cci.Type
 
+	section := make([]models.Section, len(cci.Section))
+	fmt.Println(len(cci.Section))
+	fmt.Println("sec ก่อน", cci.Section)
+	for j, sec := range cci.Section {
+		si := new(models.SectionInsert)
+		err = s.DB(models.Database).C("section").Find(bson.M{"_id": sec}).One(&si)
+		if err != nil {
+			return courses, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+		}
+		fmt.Println(sec)
+		section[j].ID = si.ID
+		section[j].Name = si.Name
+		lectures := make([]models.Lectures, len(si.Lectures))
+		for index, l := range si.Lectures {
+			lec := new(models.Lectures)
+			err = s.DB(models.Database).C("lectures").Find(bson.M{"_id": l}).One(&lec)
+			if err != nil {
+				return courses, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+			}
+			lectures[index] = *lec
+		}
+		section[j].Lectures = lectures
+	}
+	fmt.Println("sec > ", section)
+	courses.Section = section
+	if err != nil {
+		return courses, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+	}
+
 	return courses, nil
 }
 
