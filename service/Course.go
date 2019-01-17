@@ -219,3 +219,49 @@ func UpdateCourse(id string, course *models.CourseInsert) error {
 
 	return nil
 }
+
+func DeleteCourse(id string) error {
+	fmt.Println("id", id)
+	if !bson.IsObjectIdHex(id) {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	s := models.MongoSession.Copy()
+	defer s.Close()
+
+	objectIDcourse := bson.ObjectIdHex(id)
+
+	var courseIn models.CourseInsert
+
+	err := s.DB(models.Database).C("course").Find(bson.M{"_id": objectIDcourse}).One(&courseIn)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusNotFound, Message: "not found course"}
+	}
+
+	for _, section := range courseIn.Section {
+		var sectionIn models.SectionInsert
+		err = s.DB(models.Database).C("section").Find(bson.M{"_id": section}).One(&sectionIn)
+		if err != nil {
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "not found section"}
+		}
+		fmt.Println("[]lec : ", sectionIn.Lectures)
+		for _, lec := range sectionIn.Lectures {
+			fmt.Println("lec", lec)
+			err = s.DB(models.Database).C("lectures").RemoveId(lec)
+			if err != nil {
+				return &echo.HTTPError{Code: http.StatusNotFound, Message: "not RemoveId lec"}
+			}
+		}
+
+		err = s.DB(models.Database).C("section").RemoveId(section)
+		if err != nil {
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "not RemoveId section"}
+		}
+	}
+
+	err = s.DB(models.Database).C("course").RemoveId(objectIDcourse)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusNotFound, Message: "not RemoveId course"}
+	}
+
+	return nil
+}

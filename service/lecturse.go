@@ -80,3 +80,36 @@ func UpdateLectures(id string, lectures *models.Lectures) error {
 
 	return nil
 }
+
+func DeleteLectures(idlec, idsec string) error {
+	fmt.Println("id", idlec)
+	if !bson.IsObjectIdHex(idlec) {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	objectIDlec := bson.ObjectIdHex(idlec)
+	s := models.MongoSession.Copy()
+	defer s.Close()
+	err := s.DB(models.Database).C("lectures").RemoveId(objectIDlec)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusNotFound, Message: "not found"}
+	}
+	objectIDsec := bson.ObjectIdHex(idsec)
+
+	var sectionIn models.SectionInsert
+	err = s.DB(models.Database).C("section").Find(bson.M{"_id": objectIDsec}).One(&sectionIn)
+
+	for i, v := range sectionIn.Lectures {
+		if v == objectIDlec {
+			sectionIn.Lectures = append(sectionIn.Lectures[:i], sectionIn.Lectures[i+1:]...)
+			fmt.Println("i", i)
+		}
+	}
+	colQuerier := bson.M{"_id": objectIDsec}
+	change := bson.M{"$set": bson.M{"lectures": sectionIn.Lectures}}
+	err = s.DB(models.Database).C("section").Update(colQuerier, change)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "Update lecturesไม่ได้"}
+	}
+
+	return nil
+}

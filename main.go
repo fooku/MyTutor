@@ -86,14 +86,17 @@ func main() {
 	r.GET("/courseone", api.ListCourseOne)
 	r.POST("/course", api.AddCourse)
 	r.PUT("/course", api.UpdateCourse)
+	r.DELETE("/course", api.DeleteCourse)
 
 	r.GET("/sectionone", api.GetSectionOne)
 	r.POST("/section", api.AddSection)
 	r.PUT("/section", api.UpdateSection)
+	r.DELETE("/section", api.DeleteSection)
 
 	r.GET("/lecturesone", api.ListLecturesOne)
 	r.POST("/lectures", api.AddLectures)
 	r.PUT("/lectures", api.UpdateLectures)
+	r.DELETE("/lectures", api.DeleteLectures)
 
 	e.Logger.Fatal(e.Start(":" + port))
 }

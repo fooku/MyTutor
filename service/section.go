@@ -82,3 +82,52 @@ func UpdateSection(id string, section *models.SectionInsert) error {
 
 	return nil
 }
+
+func DeleteSection(idsec, idcorse string) error {
+	fmt.Println("id", idsec)
+	if !bson.IsObjectIdHex(idsec) {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	s := models.MongoSession.Copy()
+	defer s.Close()
+
+	objectIDsec := bson.ObjectIdHex(idsec)
+
+	var sectionIn models.SectionInsert
+
+	err := s.DB(models.Database).C("section").Find(bson.M{"_id": objectIDsec}).One(&sectionIn)
+
+	for _, lectures := range sectionIn.Lectures {
+		err = s.DB(models.Database).C("lectures").RemoveId(lectures)
+		if err != nil {
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "not found"}
+		}
+	}
+
+	err = s.DB(models.Database).C("section").RemoveId(objectIDsec)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusNotFound, Message: "not found"}
+	}
+
+	objectIDcourse := bson.ObjectIdHex(idcorse)
+
+	var courseIn models.CourseInsert
+	err = s.DB(models.Database).C("course").Find(bson.M{"_id": objectIDcourse}).One(&courseIn)
+
+	fmt.Println("ก่อน : ", courseIn.Section)
+	for i, section := range courseIn.Section {
+		if section == objectIDsec {
+			courseIn.Section = append(courseIn.Section[:i], courseIn.Section[i+1:]...)
+			fmt.Println("i", i)
+		}
+	}
+	fmt.Println("หลัง : ", courseIn.Section)
+	colQuerier := bson.M{"_id": objectIDcourse}
+	change := bson.M{"$set": bson.M{"section": courseIn.Section}}
+	err = s.DB(models.Database).C("course").Update(colQuerier, change)
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "Update courseไม่ได้"}
+	}
+
+	return nil
+}

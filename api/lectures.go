@@ -74,3 +74,22 @@ func UpdateLectures(c echo.Context) error {
 		"Message": "Succeed",
 	})
 }
+
+func DeleteLectures(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+	idsec := c.FormValue("idsec")
+	idlec := c.FormValue("idlec")
+
+	err := service.DeleteLectures(idlec, idsec)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, map[string]string{
+		"Message": "Succeed",
+	})
+}
