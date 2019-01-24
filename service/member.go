@@ -75,7 +75,9 @@ func UpdateMember(id string, u *models.RegisterRequest) error {
 	defer s.Close()
 
 	colQuerier := bson.M{"_id": objectID}
-	change := bson.M{"$set": bson.M{"email": u.Email, "password": u.Password}}
+	change := bson.M{"$set": bson.M{"email": u.Email, "password": u.Password,
+		"firsname": u.FirstName, "lastname": u.LastName, "nickname": u.NickName,
+		"telephonenumber": u.TelephoneNumber, "address": u.Address}}
 	err := s.DB(models.Database).C("users").Update(colQuerier, change)
 	if err != nil {
 		fmt.Println(err)

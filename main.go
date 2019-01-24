@@ -50,10 +50,12 @@ func main() {
 	e.GET("/news", api.ListNews)
 	e.GET("/promotion", api.ListPromotion)
 	e.GET("/course", api.ListCourse)
+	e.POST("/lectures", api.AddLectures)
 	// Restricted group
 	r := e.Group("/restricted")
 	r.Use(middleware.JWT([]byte("secret")))
 	// r.GET("", api.Restricted)
+	r.Static("/video", "video")
 	r.GET("/auth", api.Restricted)
 	r.GET("/member", api.ListMember)
 	r.PUT("/member/usertype", api.UpdateMemberUsertype)
