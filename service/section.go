@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/fooku/LearnOnline_Api/models"
 	"github.com/labstack/echo"
@@ -32,6 +33,8 @@ func AddSection(section *models.SectionInsert, id string) error {
 	if err != nil {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
 	}
+
+	os.Mkdir("./video/"+id+"/"+idSec.Hex(), 0777)
 
 	ci.Section = append(ci.Section, idSec)
 	colQuerier := bson.M{"_id": objectID}

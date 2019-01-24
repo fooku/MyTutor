@@ -12,6 +12,7 @@ type Course struct {
 	Hour    string        `json:"hour" bson:"hour" `
 	Creator User          `json:"creator" son:"creator" `
 	Price   string        `json:"price" bson:"price" `
+	Publish bool          `json:"publish" bson:"publish" `
 
 	Type      string `json:"type" bson:"type" `
 	Detail    string `json:"detail" bson:"detail" `
@@ -27,6 +28,7 @@ type CourseInsert struct {
 	Hour    string        `json:"hour" bson:"hour" `
 	Creator bson.ObjectId `json:"creator" son:"creator" `
 	Price   string        `json:"price" bson:"price" `
+	Publish bool          `json:"publish" bson:"publish" `
 
 	Type      string `json:"type" bson:"type" `
 	Detail    string `json:"detail" bson:"detail" `

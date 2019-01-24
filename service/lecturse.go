@@ -2,14 +2,18 @@ package service
 
 import (
 	"fmt"
+	"io"
+	"mime/multipart"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/fooku/LearnOnline_Api/models"
 	"github.com/labstack/echo"
 	"gopkg.in/mgo.v2/bson"
 )
 
-func AddLectures(lecturse *models.Lectures, id string) error {
+func AddLectures(id, quality string, file *multipart.FileHeader) error {
 	if !bson.IsObjectIdHex(id) {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
 	}
@@ -20,18 +24,46 @@ func AddLectures(lecturse *models.Lectures, id string) error {
 
 	c := s.DB(models.Database).C("lectures")
 
+	src, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+
+	lecturse := new(models.Lectures)
 	lecturse.ID = idLec
 
+	if file.Filename == "" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "ไม่มีชื่อไฟล์"}
+	}
+
+	lecturse.Name = strings.Split(file.Filename, ".mp4")[0]
+	lecturse.Link = "/video/" + idLec.Hex() + "-" + quality + ".mp4"
+
 	var si models.SectionInsert
-	err := s.DB(models.Database).C("section").Find(bson.M{"_id": objectID}).One(&si)
+	err = s.DB(models.Database).C("section").Find(bson.M{"_id": objectID}).One(&si)
 	if err != nil {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
 	}
+
+	file.Filename = idLec.Hex() + "-" + quality + ".mp4"
 
 	err = c.Insert(&lecturse)
 	if err != nil {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
 	}
+
+	// os.Mkdir("./video/"+idc+"/"+id+"/"+idLec.Hex(), 0777)
+
+	// Destination
+	dst, err := os.Create("./video/" + file.Filename)
+	if err != nil {
+		return err
+	}
+	defer dst.Close()
+
+	// Copy
+	io.Copy(dst, src)
 
 	si.Lectures = append(si.Lectures, idLec)
 	colQuerier := bson.M{"_id": objectID}

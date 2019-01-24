@@ -3,6 +3,8 @@ package service
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/fooku/LearnOnline_Api/models"
 	"github.com/labstack/echo"
@@ -14,11 +16,16 @@ func AddCourse(course *models.CourseInsert) error {
 	defer s.Close()
 
 	c := s.DB(models.Database).C("course")
+	id := bson.NewObjectId()
+	course.ID = id
 
 	err := c.Insert(&course)
 	if err != nil {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
 	}
+	os.Mkdir("."+string(filepath.Separator)+"TestDir", 0777)
+
+	os.Mkdir("./video/"+id.Hex(), 0777)
 
 	// for _, sec := range course.Section {
 	// 	lecc := make([]bson.ObjectId, 0)

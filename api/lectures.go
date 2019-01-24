@@ -18,17 +18,22 @@ func AddLectures(c echo.Context) error {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
 	}
 
-	id := c.FormValue("id")
-	lestures := new(models.Lectures)
-	err := c.Bind(lestures)
+	idsec := c.FormValue("idsec")
+	quality := c.FormValue("quality")
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		return err
+	}
+
 	fmt.Println()
-	fmt.Println("input >>>> ", lestures)
+	fmt.Println("sec >>>> ", idsec)
 	fmt.Println()
 	if err != nil {
 		return err
 	}
 
-	err = service.AddLectures(lestures, id)
+	err = service.AddLectures(idsec, quality, file)
 	if err != nil {
 		return err
 	}
