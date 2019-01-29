@@ -143,5 +143,10 @@ func DeleteLectures(idlec, idsec string) error {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "Update lecturesไม่ได้"}
 	}
 
+	err = os.Remove("./video/" + idlec + "-1080.mp4")
+	if err != nil {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "ลบไม่ได้"}
+	}
+
 	return nil
 }

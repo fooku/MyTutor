@@ -69,10 +69,12 @@ func UpdateMember(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 
-	if claims["UserType"] != "admin" {
-		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
-	}
 	id := c.FormValue("id")
+
+	if claims["id"] != id {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "id ไม่ตรงกัน อิอิ"}
+	}
+
 	u := new(models.RegisterRequest)
 	err := c.Bind(u)
 	fmt.Println(id)
