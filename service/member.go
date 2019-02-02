@@ -74,9 +74,10 @@ func UpdateMember(id string, u *models.RegisterRequest) error {
 	s := models.MongoSession.Copy()
 	defer s.Close()
 
+	fmt.Println(u)
 	colQuerier := bson.M{"_id": objectID}
-	change := bson.M{"$set": bson.M{"email": u.Email, "password": u.Password,
-		"firsname": u.FirstName, "lastname": u.LastName, "nickname": u.NickName,
+	change := bson.M{"$set": bson.M{"email": u.Email,
+		"firstname": u.FirstName, "lastname": u.LastName, "nickname": u.NickName,
 		"telephonenumber": u.TelephoneNumber, "address": u.Address}}
 	err := s.DB(models.Database).C("users").Update(colQuerier, change)
 	if err != nil {

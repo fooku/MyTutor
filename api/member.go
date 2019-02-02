@@ -78,6 +78,7 @@ func UpdateMember(c echo.Context) error {
 	u := new(models.RegisterRequest)
 	err := c.Bind(u)
 	fmt.Println(id)
+	fmt.Println(u)
 	err = service.UpdateMember(id, u)
 	if err != nil {
 		return err

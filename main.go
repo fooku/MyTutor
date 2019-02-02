@@ -89,6 +89,7 @@ func main() {
 	r.GET("/courseone", api.ListCourseOne)
 	r.POST("/course", api.AddCourse)
 	r.PUT("/course", api.UpdateCourse)
+	r.PUT("/course/publish", api.UpdatePublishCourse)
 	r.DELETE("/course", api.DeleteCourse)
 
 	r.GET("/sectionone", api.GetSectionOne)
@@ -100,6 +101,8 @@ func main() {
 	r.POST("/lectures", api.AddLectures)
 	r.PUT("/lectures", api.UpdateLectures)
 	r.DELETE("/lectures", api.DeleteLectures)
+
+	r.POST("/buy", api.BuyCourse)
 
 	e.Logger.Fatal(e.Start(":" + port))
 }

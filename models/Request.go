@@ -3,7 +3,7 @@ package models
 type RegisterRequest struct {
 	Email           string `json:"email" form:"email" query:"email"`
 	Password        string `json:"password" form:"password" query:"password"`
-	FirstName       string `json:"firsname" form:"firsname" query:"firsname"`
+	FirstName       string `json:"firstname" form:"firstname" query:"firstname"`
 	LastName        string `json:"lastname" form:"lastname" query:"lastname"`
 	TelephoneNumber string `json:"telephonenumber" form:"telephonenumber" query:"telephonenumber"`
 	NickName        string `json:"nickname" form:"nickname" query:"nickname"`

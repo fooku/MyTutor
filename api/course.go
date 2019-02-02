@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/fooku/LearnOnline_Api/models"
@@ -88,6 +89,9 @@ func UpdateCourse(c echo.Context) error {
 	course := new(models.CourseInsert)
 	err := c.Bind(course)
 	fmt.Println(id)
+	fmt.Println("c >>", course.Type)
+	fmt.Println()
+
 	err = service.UpdateCourse(id, course)
 	if err != nil {
 		return err
@@ -107,6 +111,27 @@ func DeleteCourse(c echo.Context) error {
 	id := c.FormValue("id")
 
 	err := service.DeleteCourse(id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, map[string]string{
+		"Message": "Succeed",
+	})
+}
+
+func UpdatePublishCourse(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+	id := c.FormValue("id")
+	p, err := strconv.ParseBool(c.FormValue("p"))
+	if err != nil {
+		return err
+	}
+	err = service.UpdatePublishCourse(id, p)
 	if err != nil {
 		return err
 	}

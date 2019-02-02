@@ -25,7 +25,7 @@ func AddCourse(course *models.CourseInsert) error {
 	}
 	os.Mkdir("."+string(filepath.Separator)+"TestDir", 0777)
 
-	os.Mkdir("./video/"+id.Hex(), 0777)
+	// os.Mkdir("./video/"+id.Hex(), 0777)
 
 	// for _, sec := range course.Section {
 	// 	lecc := make([]bson.ObjectId, 0)
@@ -165,6 +165,17 @@ func GetCourseOne(id string) (*models.Course, error) {
 		return courses, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "หาUser one ไม่ได้"}
 	}
 
+	var cc []models.ClaimCourse
+	for _, claim := range cci.ClaimUser {
+		var cc1 models.ClaimCourse
+		fmt.Println("claim >>>> ", claim)
+		err = s.DB(models.Database).C("claimcourse").Find(bson.M{"_id": claim}).One(&cc1)
+		if err != nil {
+			return courses, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "หา claimcourse ไม่ได้"}
+		}
+		cc = append(cc, cc1)
+	}
+
 	courses.ID = cci.ID
 	courses.Name = cci.Name
 	courses.Hour = cci.Hour
@@ -173,6 +184,7 @@ func GetCourseOne(id string) (*models.Course, error) {
 	courses.Thumbnail = cci.Thumbnail
 	courses.Detail = cci.Detail
 	courses.Type = cci.Type
+	courses.ClaimUser = cc
 
 	section := make([]models.Section, len(cci.Section))
 	fmt.Println(len(cci.Section))
@@ -268,6 +280,25 @@ func DeleteCourse(id string) error {
 	err = s.DB(models.Database).C("course").RemoveId(objectIDcourse)
 	if err != nil {
 		return &echo.HTTPError{Code: http.StatusNotFound, Message: "not RemoveId course"}
+	}
+
+	return nil
+}
+
+func UpdatePublishCourse(id string, p bool) error {
+	fmt.Println("id", id)
+	if !bson.IsObjectIdHex(id) {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+	objectID := bson.ObjectIdHex(id)
+	s := models.MongoSession.Copy()
+	defer s.Close()
+
+	colQuerier := bson.M{"_id": objectID}
+	change := bson.M{"$set": bson.M{"publish": p}}
+	err := s.DB(models.Database).C("course").Update(colQuerier, change)
+	if err != nil {
+		fmt.Println(err)
 	}
 
 	return nil
