@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/fooku/LearnOnline_Api/models"
 	"github.com/labstack/echo"
@@ -100,6 +101,17 @@ func DeleteSection(idsec, idcorse string) error {
 	err := s.DB(models.Database).C("section").Find(bson.M{"_id": objectIDsec}).One(&sectionIn)
 
 	for _, lectures := range sectionIn.Lectures {
+		var lec models.Lectures
+		err = s.DB(models.Database).C("lectures").Find(bson.M{"_id": lectures}).One(&lec)
+		if err != nil {
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "not found lecturse"}
+		}
+
+		err := os.Remove("." + lec.Link)
+		if err != nil {
+			return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "ลบไม่ได้"}
+		}
+
 		err = s.DB(models.Database).C("lectures").RemoveId(lectures)
 		if err != nil {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "not found"}

@@ -185,6 +185,7 @@ func GetCourseOne(id string) (*models.Course, error) {
 	courses.Detail = cci.Detail
 	courses.Type = cci.Type
 	courses.ClaimUser = cc
+	courses.Publish = cci.Publish
 
 	section := make([]models.Section, len(cci.Section))
 	fmt.Println(len(cci.Section))
@@ -264,7 +265,18 @@ func DeleteCourse(id string) error {
 		}
 		fmt.Println("[]lec : ", sectionIn.Lectures)
 		for _, lec := range sectionIn.Lectures {
-			fmt.Println("lec", lec)
+
+			var lectures models.Lectures
+			err = s.DB(models.Database).C("lectures").Find(bson.M{"_id": lec}).One(&lectures)
+			if err != nil {
+				return &echo.HTTPError{Code: http.StatusNotFound, Message: "not found lecturse"}
+			}
+
+			err = os.Remove("." + lectures.Link)
+			if err != nil {
+				return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "ลบไม่ได้"}
+			}
+
 			err = s.DB(models.Database).C("lectures").RemoveId(lec)
 			if err != nil {
 				return &echo.HTTPError{Code: http.StatusNotFound, Message: "not RemoveId lec"}

@@ -128,6 +128,7 @@ func UpdatePublishCourse(c echo.Context) error {
 	}
 	id := c.FormValue("id")
 	p, err := strconv.ParseBool(c.FormValue("p"))
+	fmt.Println(id, p)
 	if err != nil {
 		return err
 	}

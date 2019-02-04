@@ -90,6 +90,7 @@ func main() {
 	r.POST("/course", api.AddCourse)
 	r.PUT("/course", api.UpdateCourse)
 	r.PUT("/course/publish", api.UpdatePublishCourse)
+	r.GET("/course/publish", api.UpdatePublishCourse)
 	r.DELETE("/course", api.DeleteCourse)
 
 	r.GET("/sectionone", api.GetSectionOne)

@@ -10,7 +10,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func BuyCourse(idUser, idCourse string) error {
+func BuyCourse(idUser, idCourse string, date int) error {
 	if !bson.IsObjectIdHex(idUser) {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
 	}
@@ -41,7 +41,7 @@ func BuyCourse(idUser, idCourse string) error {
 	cu.IDCourse = objectIDCourse
 	cu.IDUser = objectIDUser
 	cu.TimeStart = time.Now()
-	cu.TimeEnd = time.Now()
+	cu.TimeEnd = time.Now().AddDate(0, 0, date)
 	err = s.DB(models.Database).C("claimcourse").Insert(&cu)
 	if err != nil {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "Insert claimcourse ไม่ได้"}
