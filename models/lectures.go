@@ -8,4 +8,5 @@ type Lectures struct {
 	Time    float64         `json:"time" bson:"time" `
 	Link    string          `json:"link" bson:"link" `
 	Comment []bson.ObjectId `json:"comment" bson:"comment" `
+	Publish bool            `json:"publish" bson:"publish" `
 }

@@ -81,6 +81,7 @@ func FindUser(email string) (error, models.UserResponse) {
 	user.Timestamp = result.Timestamp
 	user.Address = result.Address
 	user.Birthday = result.Birthday
+	user.HasPassword = result.HasPassword
 	user.MyCourse = cc
 
 	fmt.Println("Results All: ", result.HasPassword)

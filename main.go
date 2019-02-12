@@ -51,6 +51,7 @@ func main() {
 	e.GET("/promotion", api.ListPromotion)
 	e.GET("/course", api.ListCourse)
 	e.POST("/lectures", api.AddLectures)
+	e.GET("/courseone", api.GetCourseOnePublish)
 	e.Static("/video", "video")
 	// Restricted group
 	r := e.Group("/restricted")

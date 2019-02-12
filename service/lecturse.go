@@ -104,7 +104,7 @@ func UpdateLectures(id string, lectures *models.Lectures) error {
 
 	colQuerier := bson.M{"_id": objectID}
 	fmt.Println(lectures)
-	change := bson.M{"$set": bson.M{"name": lectures.Name, "time": lectures.Time, "link": lectures.Link}}
+	change := bson.M{"$set": bson.M{"name": lectures.Name, "time": lectures.Time, "link": lectures.Link, "publish": lectures.Publish}}
 	err := s.DB(models.Database).C("lectures").Update(colQuerier, change)
 	if err != nil {
 		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "Update lecturesไม่ได้"}

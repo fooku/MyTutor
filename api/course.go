@@ -140,3 +140,13 @@ func UpdatePublishCourse(c echo.Context) error {
 		"Message": "Succeed",
 	})
 }
+
+func GetCourseOnePublish(c echo.Context) error {
+	id := c.FormValue("id")
+
+	course, err := service.GetCourseOnePublish(id)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, course)
+}

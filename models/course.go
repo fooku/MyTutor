@@ -10,7 +10,6 @@ type Course struct {
 	ID        bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Name      string        `json:"name" bson:"name" `
 	Hour      string        `json:"hour" bson:"hour" `
-	Creator   User          `json:"creator" son:"creator" `
 	Price     string        `json:"price" bson:"price" `
 	Publish   bool          `json:"publish" bson:"publish" `
 	ClaimUser []ClaimCourse `json:"claimuser" bson:"claimuser" `
