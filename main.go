@@ -18,7 +18,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "80"
+		port = "8080"
 	}
 
 	err := models.Init(mongoURL)
@@ -53,6 +53,7 @@ func main() {
 	e.POST("/lectures", api.AddLectures)
 	e.GET("/courseone", api.GetCourseOnePublish)
 	e.Static("/video", "video")
+	e.Static("/img", "img")
 	// Restricted group
 	r := e.Group("/restricted")
 	r.Use(middleware.JWT([]byte("secret")))
@@ -92,6 +93,7 @@ func main() {
 	r.PUT("/course", api.UpdateCourse)
 	r.PUT("/course/publish", api.UpdatePublishCourse)
 	r.GET("/course/publish", api.UpdatePublishCourse)
+	r.GET("/mycourse", api.GetMyCourse)
 	r.DELETE("/course", api.DeleteCourse)
 
 	r.GET("/sectionone", api.GetSectionOne)
@@ -105,6 +107,14 @@ func main() {
 	r.DELETE("/lectures", api.DeleteLectures)
 
 	r.POST("/buy", api.BuyCourse)
+
+	r.POST("/cart", api.AddItem)
+	r.POST("/oo", api.DeleteItem)
+
+	r.GET("/order", api.GenOrder)
+
+	r.POST("/img", api.AddImg)
+	r.GET("/img", api.ListImg)
 
 	e.Logger.Fatal(e.Start(":" + port))
 }

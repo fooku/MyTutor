@@ -121,9 +121,11 @@ func GetCourse() (*[]models.Course, error) {
 		courses[i].Name = course.Name
 		courses[i].Hour = course.Hour
 		courses[i].Price = course.Price
+		courses[i].Publish = course.Publish
 		courses[i].Thumbnail = course.Thumbnail
 		courses[i].Detail = course.Detail
 		courses[i].Type = course.Type
+
 	}
 
 	return &courses, nil
@@ -352,6 +354,75 @@ func GetCourseOnePublish(id string) (*models.Course, error) {
 				lec2.Publish = lec.Publish
 				lectures = append(lectures, *lec2)
 			}
+		}
+		section[j].Lectures = lectures
+	}
+	fmt.Println("sec > ", section)
+	courses.Section = section
+	if err != nil {
+		return courses, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+	}
+
+	return courses, nil
+}
+
+func GetMyCourse(idC, idUser string) (*models.Course, error) {
+	s := models.MongoSession.Copy()
+	defer s.Close()
+	if !bson.IsObjectIdHex(idC) {
+		return nil, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid id"}
+	}
+
+	idH := bson.ObjectIdHex(idC)
+	var cccc models.ClaimCourse
+	err := s.DB(models.Database).C("claimcourse").Find(bson.M{"_id": idH}).One(&cccc)
+	if err != nil {
+		return nil, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "หา claimcourse one ไม่ได้"}
+	}
+
+	if cccc.IDUser.Hex() != idUser {
+		return nil, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "course ไม่ตรง User"}
+	}
+
+	var cci models.CourseInsert
+
+	err = s.DB(models.Database).C("course").Find(bson.M{"_id": cccc.IDCourse}).One(&cci)
+	if err != nil {
+		return nil, &echo.HTTPError{Code: http.StatusUnauthorized, Message: "หาCourse one ไม่ได้"}
+	}
+	courses := new(models.Course)
+
+	courses.ID = cci.ID
+	courses.Name = cci.Name
+	courses.Hour = cci.Hour
+	courses.Price = cci.Price
+	courses.Thumbnail = cci.Thumbnail
+	courses.Detail = cci.Detail
+	courses.Type = cci.Type
+	courses.Publish = cci.Publish
+
+	section := make([]models.Section, len(cci.Section))
+	fmt.Println(len(cci.Section))
+	fmt.Println("sec ก่อน", cci.Section)
+	for j, sec := range cci.Section {
+		si := new(models.SectionInsert)
+		err = s.DB(models.Database).C("section").Find(bson.M{"_id": sec}).One(&si)
+		if err != nil {
+			return courses, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+		}
+		fmt.Println(sec)
+		section[j].ID = si.ID
+		section[j].Name = si.Name
+		var lectures []models.Lectures
+		for _, l := range si.Lectures {
+			lec := new(models.Lectures)
+			err = s.DB(models.Database).C("lectures").Find(bson.M{"_id": l}).One(&lec)
+			if err != nil {
+				return courses, &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
+			}
+
+			lectures = append(lectures, *lec)
+
 		}
 		section[j].Lectures = lectures
 	}

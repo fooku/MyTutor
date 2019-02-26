@@ -45,6 +45,7 @@ func Login(c echo.Context) error {
 			return err
 		}
 		res := new(models.LoginResponse)
+
 		res.User = user
 		res.Token = t
 		return c.JSON(http.StatusOK, res)

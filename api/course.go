@@ -150,3 +150,17 @@ func GetCourseOnePublish(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, course)
 }
+
+func GetMyCourse(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	id := c.FormValue("id")
+
+	idc := claims["id"].(string)
+	course, err := service.GetMyCourse(id, idc)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, course)
+}
