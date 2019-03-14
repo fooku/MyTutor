@@ -76,3 +76,21 @@ func ListImg(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, news)
 }
+func DeleteImg(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+
+	idimg := c.FormValue("idimg")
+
+	err := service.DeleteImg(idimg)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, map[string]string{
+		"Message": "Succeed",
+	})
+}

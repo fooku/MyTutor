@@ -62,6 +62,7 @@ func Register(c echo.Context) error {
 	err := c.Bind(u)
 
 	fmt.Println(u)
+	//เก็บข้อมูลผู้ใช้ลง mongoDB
 	err = service.AddUser(&user, u)
 	if err != nil {
 		return err
