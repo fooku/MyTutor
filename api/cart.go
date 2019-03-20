@@ -122,21 +122,21 @@ func AddPayment2(c echo.Context) error {
 
 	file, err := c.FormFile("file")
 	if err != nil {
-		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "uplode error"}
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
 	}
 
 	img := "/imagepayment/" + file.Filename
 
 	src, err := file.Open()
 	if err != nil {
-		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "uplode error"}
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
 	}
 	defer src.Close()
 
 	// Destination
 	dst, err := os.Create("./imagepayment/" + file.Filename)
 	if err != nil {
-		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "uplode error"}
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: err}
 	}
 	defer dst.Close()
 
