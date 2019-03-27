@@ -125,5 +125,7 @@ func main() {
 	r.POST("/payment2", api.AddPayment2)
 	r.GET("/ooo", api.BuyMany)
 
+	r.POST("/pass", api.ResetPassword2)
+
 	e.Logger.Fatal(e.Start(":" + port))
 }

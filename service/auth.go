@@ -105,3 +105,17 @@ func FindUser(email string) (error, models.UserResponse) {
 
 	return nil, user
 }
+
+func ResetPassword(user *models.UserResponse) error {
+	s := models.MongoSession.Copy()
+	defer s.Close()
+
+	colQuerier := bson.M{"_id": user.ID}
+	change := bson.M{"$set": bson.M{"haspassword": user.HasPassword}}
+	err := s.DB(models.Database).C("users").Update(colQuerier, change)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return nil
+}

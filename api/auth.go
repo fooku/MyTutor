@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
 	"time"
 
@@ -72,6 +73,35 @@ func Register(c echo.Context) error {
 	})
 }
 
+func ResetPassword2(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	if claims["UserType"] != "admin" {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "admin only naja"}
+	}
+
+	u := new(models.ResetRequest)
+	err := c.Bind(u)
+
+	err, userf := service.FindUser(u.Email)
+
+	if err == mgo.ErrNotFound {
+		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid email"}
+	}
+
+	NewPassword := RandStringRunes(10)
+	userf.SetPassword(NewPassword)
+
+	err = service.ResetPassword(&userf)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusOK, map[string]string{
+		"newpassword": NewPassword,
+	})
+}
+
 // Restricted > jwt
 func Restricted(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
@@ -86,4 +116,14 @@ func Restricted(c echo.Context) error {
 	}
 	// เพิ่มคำร้อง
 	return c.JSON(http.StatusOK, u)
+}
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func RandStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }

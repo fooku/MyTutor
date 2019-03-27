@@ -21,3 +21,9 @@ type LoginRequest struct {
 type UpdateRequest struct {
 	Usertype string `json:"usertype" form:"usertype" query:"usertype"`
 }
+
+type ResetRequest struct {
+	Email       string `json:"email" form:"email" query:"email"`
+	Password    string `json:"password" form:"password" query:"password"`
+	NewPassword string `json:"newpassword" form:"newpassword" query:"newpassword"`
+}
